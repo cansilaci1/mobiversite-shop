@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cart from "./cartSlice";
-import wishlist from "./wishListSlice";
-
+import wishlist from "./wishlistSlice";
 const LS_KEY = "redux_state";
 
 function loadState() {
@@ -11,13 +10,14 @@ function loadState() {
     return raw ? JSON.parse(raw) : undefined;
   } catch { return undefined; }
 }
+
 function saveState(state) {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(
-      LS_KEY,
-      JSON.stringify({ cart: state.cart, wishlist: state.wishlist })
-    );
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      cart: state.cart,
+      wishlist: state.wishlist
+    }));
   } catch {}
 }
 

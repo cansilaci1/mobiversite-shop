@@ -1,14 +1,18 @@
 import api from "@/lib/axios";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
-import WishlistButton from "@/components/WishlistButton"; // <-- eklendi
+import WishlistButton from "@/components/WishlistButton";
 
 export const revalidate = 0;
 
 export default async function ProductDetailPage({ params }) {
-  const id = params.id;
+  // 🔧 Next 15: params async -> önce await et
+  const { id } = await params;
+  const productId = Number(id);
+  if (!Number.isFinite(productId)) return notFound();
+
   try {
-    const { data: product } = await api.get(`/products/${id}`);
+    const { data: product } = await api.get(`/products/${productId}`);
     if (!product?.id) return notFound();
 
     return (
@@ -34,3 +38,4 @@ export default async function ProductDetailPage({ params }) {
     return notFound();
   }
 }
+  
