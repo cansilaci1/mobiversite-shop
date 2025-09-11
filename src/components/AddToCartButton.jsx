@@ -7,7 +7,10 @@ export default function AddToCartButton({ product, qty = 1, className = "" }) {
   return (
     <button
       className={`btn btn-primary ${className}`}
-      onClick={() => dispatch(addToCart({ id: product.id, title: product.title, price: product.price, qty }))}>
+      onClick={() =>
+        dispatch(addToCart({ id: product.id, title: product.title, price: product.price, qty }))
+      }
+    >
       Add to Cart
     </button>
   );

@@ -33,14 +33,12 @@ export default async function ProductDetailPage({ params }) {
         <p className="text-gray-700">{product.description}</p>
 
         {/* Bir sonraki adımda CartContext’i ekleyip bu butonu aktif edeceğiz */}
-        <div className="flex gap-3 pt-2">
-          <button className="btn btn-primary opacity-50 cursor-not-allowed" disabled>
-            Add to Cart (soon)
-          </button>
-          <button className="btn btn-outline opacity-50 cursor-not-allowed" disabled>
-            Wishlist (soon)
-          </button>
-        </div>
+    <div className="flex gap-3 pt-2">
+      <AddToCartButton product={product} />
+      <button className="btn btn-outline opacity-50 cursor-not-allowed" disabled>
+        Wishlist (soon)
+      </button>
+    </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "./cartSlice";
+import cart from "./cartSlice";
 
 const LS_KEY = "redux_state";
 
@@ -16,8 +16,8 @@ function saveState(state) {
 }
 
 export const store = configureStore({
-  reducer: { cart: cartReducer },
-  preloadedState: loadState(),
+  reducer: { cart },
+  preloadedState: loadState()
 });
 
 if (typeof window !== "undefined") {
