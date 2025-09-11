@@ -2,11 +2,44 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartItems, selectCartTotal, updateQty, removeFromCart, clearCart } from "@/store/cartSlice";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function CartPage() {
   const dispatch = useDispatch();
   const items = useSelector(selectCartItems);
   const total = useSelector(selectCartTotal);
+  const router = useRouter();
+  const sp = useSearchParams(); // Next 15'te bile client'ta normal kullanılabiliyor
+  const [placing, setPlacing] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function handleCheckout() {
+    setPlacing(true); setErr("");
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ items })
+      });
+
+      if (res.status === 401) {
+        // login yok → login'e yönlendir; dönüşte tekrar /cart açılacak
+        const redirect = "/cart?checkout=1";
+        router.push(`/login?redirect=${encodeURIComponent(redirect)}`);
+        return;
+      }
+      if (!res.ok) throw new Error("Failed to place order");
+
+      // başarı → sepeti temizle ve profile'a
+      dispatch(clearCart());
+      router.push("/profile");
+    } catch (e) {
+      setErr(e.message || "Checkout failed");
+    } finally {
+      setPlacing(false);
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -24,12 +57,10 @@ export default function CartPage() {
       <div className="space-y-3">
         {items.map(it => (
           <div key={it.id} className="card flex items-center justify-between gap-3">
-            <div className="font-medium">{it.title}</div>
+            <div className="font-medium line-clamp-1">{it.title}</div>
             <div className="text-gray-700">${it.price}</div>
             <input
-              type="number"
-              min="1"
-              className="border rounded-lg px-2 py-1 w-20"
+              type="number" min="1" className="border rounded-lg px-2 py-1 w-20"
               value={it.quantity}
               onChange={(e) => dispatch(updateQty({ id: it.id, qty: e.target.value }))}
             />
@@ -41,10 +72,13 @@ export default function CartPage() {
       <div className="card flex items-center justify-between">
         <div className="text-xl font-semibold">Total: ${total.toFixed(2)}</div>
         <div className="flex gap-2">
-          <button className="btn" onClick={() => dispatch(clearCart())}>Clear</button>
-          <Link href="/login" className="btn btn-primary">Checkout</Link>
+          <button className="btn btn-primary" onClick={handleCheckout} disabled={placing}>
+            {placing ? "Placing…" : "Checkout"}
+          </button>
         </div>
       </div>
+
+      {err && <p className="text-red-600">{err}</p>}
     </div>
   );
 }
