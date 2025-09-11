@@ -41,6 +41,15 @@ export default function CartPage() {
     }
   }
 
+   useEffect(() => {
+    const shouldAuto = sp.get("checkout") === "1";
+    if (shouldAuto && items.length > 0 && !triedAuto.current && !placing) {
+      triedAuto.current = true;
+      placeOrder();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sp, items.length]);
+
   if (items.length === 0) {
     return (
       <div className="card">
