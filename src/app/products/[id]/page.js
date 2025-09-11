@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import { notFound } from "next/navigation";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export const revalidate = 0; // dev sırasında cache tutma
 
