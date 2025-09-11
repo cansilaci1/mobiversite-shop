@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cart from "./cartSlice";
-import wishlist from "./wishListsSlice";
+import wishlist from "./wishListSlice";
 
 const LS_KEY = "redux_state";
 
