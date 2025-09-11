@@ -1,30 +1,38 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCartItems, selectCartTotal, updateQty, removeFromCart, clearCart } from "@/store/cartSlice";
+import {
+  selectCartItems,
+  selectCartTotal,
+  updateQty,
+  removeFromCart,
+  clearCart,
+} from "@/store/cartSlice";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react"; // ✅ useEffect & useRef
 
 export default function CartPage() {
   const dispatch = useDispatch();
   const items = useSelector(selectCartItems);
   const total = useSelector(selectCartTotal);
   const router = useRouter();
-  const sp = useSearchParams(); // Next 15'te bile client'ta normal kullanılabiliyor
+  const sp = useSearchParams();
   const [placing, setPlacing] = useState(false);
   const [err, setErr] = useState("");
+  const triedAuto = useRef(false); // ✅ auto-resume guard
 
   async function handleCheckout() {
-    setPlacing(true); setErr("");
+    setPlacing(true);
+    setErr("");
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items })
+        body: JSON.stringify({ items }),
       });
 
       if (res.status === 401) {
-        // login yok → login'e yönlendir; dönüşte tekrar /cart açılacak
+        // login yok → login'e yönlendir; dönüşte otomatik devam
         const redirect = "/cart?checkout=1";
         router.push(`/login?redirect=${encodeURIComponent(redirect)}`);
         return;
@@ -41,12 +49,14 @@ export default function CartPage() {
     }
   }
 
-   useEffect(() => {
+  // ✅ Auto-resume: /cart?checkout=1 ile gelindiyse bir KEZ otomatik sipariş ver
+  useEffect(() => {
     const shouldAuto = sp.get("checkout") === "1";
     if (shouldAuto && items.length > 0 && !triedAuto.current && !placing) {
       triedAuto.current = true;
-      placeOrder();
+      handleCheckout();
     }
+    // handleCheckout/placing'i bilinçli olarak dependency'e eklemiyoruz.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sp, items.length]);
 
@@ -54,7 +64,9 @@ export default function CartPage() {
     return (
       <div className="card">
         <p>Your cart is empty.</p>
-        <Link className="btn btn-primary mt-3" href="/products">Go shopping</Link>
+        <Link className="btn btn-primary mt-3" href="/products">
+          Go shopping
+        </Link>
       </div>
     );
   }
@@ -64,16 +76,22 @@ export default function CartPage() {
       <h1 className="text-2xl font-bold">Your Cart</h1>
 
       <div className="space-y-3">
-        {items.map(it => (
+        {items.map((it) => (
           <div key={it.id} className="card flex items-center justify-between gap-3">
             <div className="font-medium line-clamp-1">{it.title}</div>
             <div className="text-gray-700">${it.price}</div>
             <input
-              type="number" min="1" className="border rounded-lg px-2 py-1 w-20"
+              type="number"
+              min="1"
+              className="border rounded-lg px-2 py-1 w-20"
               value={it.quantity}
-              onChange={(e) => dispatch(updateQty({ id: it.id, qty: e.target.value }))}
+              onChange={(e) =>
+                dispatch(updateQty({ id: it.id, qty: e.target.value }))
+              }
             />
-            <button className="btn" onClick={() => dispatch(removeFromCart(it.id))}>Remove</button>
+            <button className="btn" onClick={() => dispatch(removeFromCart(it.id))}>
+              Remove
+            </button>
           </div>
         ))}
       </div>

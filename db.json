@@ -174,7 +174,7 @@
         }
       ],
       "total": 47.97,
-      "status": "created",
+      "status": "paid",
       "userId": "1"
     },
     {
@@ -189,7 +189,73 @@
         }
       ],
       "total": 109.95,
-      "status": "created",
+      "status": "paid",
+      "userId": "1"
+    },
+    {
+      "id": "57ce",
+      "date": "2025-09-11T20:23:56.617Z",
+      "items": [
+        {
+          "id": "1",
+          "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+          "price": 109.95,
+          "quantity": 5
+        },
+        {
+          "id": "2",
+          "title": "Mens Casual Premium Slim Fit T-Shirts ",
+          "price": 22.3,
+          "quantity": 4
+        }
+      ],
+      "total": 638.95,
+      "status": "paid",
+      "userId": "1"
+    },
+    {
+      "id": "67f8",
+      "date": "2025-09-11T20:24:53.334Z",
+      "items": [
+        {
+          "id": "1",
+          "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+          "price": 109.95,
+          "quantity": 1
+        }
+      ],
+      "total": 109.95,
+      "status": "paid",
+      "userId": "1"
+    },
+    {
+      "id": "89b9",
+      "date": "2025-09-11T20:25:15.643Z",
+      "items": [
+        {
+          "id": "2",
+          "title": "Mens Casual Premium Slim Fit T-Shirts ",
+          "price": 22.3,
+          "quantity": 1
+        }
+      ],
+      "total": 22.3,
+      "status": "paid",
+      "userId": "1"
+    },
+    {
+      "id": "e1b8",
+      "date": "2025-09-11T20:26:50.422Z",
+      "items": [
+        {
+          "id": "1",
+          "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+          "price": 109.95,
+          "quantity": 6
+        }
+      ],
+      "total": 659.7,
+      "status": "paid",
       "userId": "1"
     }
   ],

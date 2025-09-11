@@ -1,10 +1,11 @@
 import api from "@/lib/axios";
 import { getSession } from "@/lib/auth";
+import MarkPaidButton from "@/components/MarkPaidButton";
 
 export const revalidate = 0;
 
 export default async function ProfilePage() {
-  // middleware zaten koruyor ama yine de güvenli davranalım
+  // middleware koruyor ama yine de güvenli kal
   const session = getSession();
   if (!session) {
     return (
@@ -15,10 +16,21 @@ export default async function ProfilePage() {
     );
   }
 
-  // yalnızca kullanıcının siparişleri
-  const { data: orders } = await api.get("/orders", {
-    params: { userId: session.id, _sort: "date", _order: "desc" }
-  });
+  // siparişleri çek (yalnızca bu kullanıcı)
+  let orders = [];
+  try {
+    const { data } = await api.get("/orders", {
+      params: { userId: session.id, _sort: "date", _order: "desc" },
+    });
+    orders = Array.isArray(data) ? data : [];
+  } catch (e) {
+    return (
+      <div className="card">
+        <h1 className="text-xl font-bold">Profile</h1>
+        <p className="text-red-600">Orders could not be loaded.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -30,11 +42,11 @@ export default async function ProfilePage() {
       <div className="space-y-3">
         <h2 className="text-xl font-semibold">Order history</h2>
 
-        {(!orders || orders.length === 0) ? (
+        {orders.length === 0 ? (
           <div className="card">No orders yet.</div>
         ) : (
           <div className="space-y-3">
-            {orders.map(o => (
+            {orders.map((o) => (
               <div key={o.id} className="card">
                 <div className="flex items-center justify-between">
                   <div>
@@ -43,11 +55,13 @@ export default async function ProfilePage() {
                       {new Date(o.date).toLocaleString()} • {o.status}
                     </div>
                   </div>
-                  <div className="text-lg font-semibold">${Number(o.total).toFixed(2)}</div>
+                  <div className="text-lg font-semibold">
+                    ${Number(o.total).toFixed(2)}
+                  </div>
                 </div>
 
                 <div className="mt-3 grid sm:grid-cols-2 md:grid-cols-3 gap-2">
-                  {o.items?.map(it => (
+                  {o.items?.map((it) => (
                     <div key={it.id} className="border rounded-lg px-3 py-2">
                       <div className="font-medium line-clamp-1">{it.title}</div>
                       <div className="text-sm text-gray-600">
@@ -56,6 +70,11 @@ export default async function ProfilePage() {
                     </div>
                   ))}
                 </div>
+
+                {/* status 'paid' değilse PATCH örneği için buton */}
+                {o.status !== "paid" && (
+                  <MarkPaidButton orderId={o.id} className="mt-3" />
+                )}
               </div>
             ))}
           </div>
