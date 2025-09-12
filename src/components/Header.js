@@ -3,11 +3,51 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { selectCartCount } from "@/store/cartSlice";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+function SearchBox() {
+  const [q, setQ] = useState("");
+  const router = useRouter();
+
+  function onSubmit(e) {
+    e.preventDefault();
+    const qs = q.trim();
+    router.push(qs ? `/products?q=${encodeURIComponent(qs)}` : "/products");
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="flex-1 max-w-2xl hidden md:flex">
+      <input
+        className="input rounded-r-none"
+        placeholder="Ürün, kategori ara (örn. 't-shirt')"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+      />
+      <button className="btn btn-primary rounded-l-none" type="submit">Ara</button>
+    </form>
+  );
+}
+
+function CategoryBar() {
+  const cats = ["Elektronik", "Moda", "Ev & Yaşam", "Kozmetik", "Spor", "Anne & Bebek", "Süpermarket", "Ayakkabı"];
+  return (
+    <div className="border-t bg-white">
+      <div className="container">
+        <div className="flex gap-4 overflow-x-auto py-2 no-scrollbar">
+          {cats.map((c) => (
+            <Link key={c} href={`/products?cat=${encodeURIComponent(c)}`} className="chip whitespace-nowrap">
+              {c}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Header() {
   const count = useSelector(selectCartCount);
   const [user, setUser] = useState(null);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -22,55 +62,30 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
-      <div className="container py-3 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">Mobiversite</Link>
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b">
+      <div className="container py-3 flex items-center gap-3">
+        <Link href="/" className="text-2xl font-extrabold text-brand">mobiversite</Link>
 
-        <nav className="hidden md:flex items-center gap-5">
-          <Link href="/products" className="hover:underline">Products</Link>
-          <Link href="/wishlist" className="hover:underline">Wishlist</Link>
-          <Link href="/profile" className="hover:underline">Profile</Link>
+        <SearchBox />
 
+        <nav className="ml-auto flex items-center gap-3">
+          <Link href="/wishlist" className="btn btn-ghost hidden sm:inline-flex">Favoriler</Link>
+          {user ? (
+            <form action="/api/logout" method="post">
+              <button className="btn btn-ghost" type="submit">Çıkış</button>
+            </form>
+          ) : (
+            <Link href="/login" className="btn btn-ghost">Giriş</Link>
+          )}
           <Link href="/cart" className="relative btn btn-outline">
-            Cart
-            <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full text-xs flex items-center justify-center bg-black text-white">
+            Sepet
+            <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full text-xs flex items-center justify-center bg-brand text-white">
               {count}
             </span>
           </Link>
-
-          {user ? (
-            <form action="/api/logout" method="post">
-              <button className="btn" type="submit">Logout</button>
-            </form>
-          ) : (
-            <Link href="/login" className="btn">Login</Link>
-          )}
         </nav>
-
-        <button className="md:hidden btn btn-outline px-3 py-2" onClick={() => setOpen(!open)} aria-expanded={open}>
-          ☰
-        </button>
       </div>
-
-      {open && (
-        <div className="md:hidden border-t bg-white/95">
-          <div className="container py-3 flex flex-col gap-3">
-            <Link href="/products" onClick={() => setOpen(false)}>Products</Link>
-            <Link href="/wishlist" onClick={() => setOpen(false)}>Wishlist</Link>
-            <Link href="/profile" onClick={() => setOpen(false)}>Profile</Link>
-            <Link href="/cart" onClick={() => setOpen(false)} className="btn btn-outline w-fit">
-              Cart ({count})
-            </Link>
-            {user ? (
-              <form action="/api/logout" method="post">
-                <button className="btn w-fit" type="submit" onClick={() => setOpen(false)}>Logout</button>
-              </form>
-            ) : (
-              <Link href="/login" className="btn w-fit" onClick={() => setOpen(false)}>Login</Link>
-            )}
-          </div>
-        </div>
-      )}
+      <CategoryBar />
     </header>
   );
 }

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectWishlistIds, remove, clear } from "@/store/wishlistSlice";
 import api from "@/lib/axios";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function WishlistPage() {
   const ids = useSelector(selectWishlistIds);
@@ -71,7 +72,7 @@ export default function WishlistPage() {
         {items.map((p) => (
           <div key={p.id} className="card flex flex-col">
             <Link href={`/products/${p.id}`}>
-              <img src={p.image} alt={p.title} className="h-40 w-full object-contain" />
+              <Image src={p.image} alt={p.title} className="h-40 w-full object-contain" width={500} height={500} />
               <h3 className="mt-3 font-semibold line-clamp-2">{p.title}</h3>
             </Link>
             <p className="mt-1 text-gray-700">${p.price}</p>

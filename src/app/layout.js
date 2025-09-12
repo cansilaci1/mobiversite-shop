@@ -6,7 +6,7 @@ export const metadata = { title: "Mobiversite Shop", description: "Next.js 15 de
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="tr">
       <body>
         <Providers>
           <Header />

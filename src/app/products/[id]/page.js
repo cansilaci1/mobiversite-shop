@@ -2,12 +2,12 @@ import api from "@/lib/axios";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import WishlistButton from "@/components/WishlistButton";
+import Image from "next/image";
 
 export const revalidate = 0;
 
 export default async function ProductDetailPage({ params }) {
-  // 🔧 Next 15: params async -> önce await et
-  const { id } = await params;
+  const { id } = params;
   const productId = Number(id);
   if (!Number.isFinite(productId)) return notFound();
 
@@ -18,7 +18,7 @@ export default async function ProductDetailPage({ params }) {
     return (
       <div className="grid md:grid-cols-2 gap-8">
         <div className="card flex items-center justify-center">
-          <img src={product.image} alt={product.title} className="max-h-80 object-contain" />
+          <Image src={product.image} alt={product.title} className="max-h-80 object-contain" width={500} height={500} />
         </div>
 
         <div className="space-y-4">
@@ -38,4 +38,3 @@ export default async function ProductDetailPage({ params }) {
     return notFound();
   }
 }
-  
