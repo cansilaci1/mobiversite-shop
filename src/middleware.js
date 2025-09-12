@@ -1,12 +1,22 @@
 import { NextResponse } from "next/server";
 
 export function middleware(req) {
-  const session = req.cookies.get("session")?.value;
+  const raw = req.cookies.get("session")?.value;
   const { pathname, search } = req.nextUrl;
   const isApi = pathname.startsWith("/api/");
+  const isOptions = req.method === "OPTIONS";
 
-  // korunan rotalarda cookie yoksa:
-  if (!session) {
+  // CORS preflight vs.
+  if (isApi && isOptions) return NextResponse.next();
+
+  // session doğrulama
+  let valid = false;
+  try {
+    const s = JSON.parse(raw || "{}");
+    valid = !!s?.id; // id varsa oturum geçerli say
+  } catch { valid = false; }
+
+  if (!valid) {
     if (isApi) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -18,7 +28,6 @@ export function middleware(req) {
   return NextResponse.next();
 }
 
-// /profile, /wishlist ve orders API’yı koruyoruz
 export const config = {
   matcher: ["/profile/:path*", "/wishlist/:path*", "/api/orders/:path*"],
 };
