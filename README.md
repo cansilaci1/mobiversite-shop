@@ -48,6 +48,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## CANLI DEMO URL'LERİ
 Frontend (Vercel): https://mobiversite-shop.vercel.app
-
 Backend (Render): https://mobiversite-api.onrender.com/products
+
 ---
