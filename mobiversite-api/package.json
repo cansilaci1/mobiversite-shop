@@ -1,15 +1,11 @@
 {
   "name": "mobiversite-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"no build step for json-server\"",
+    "start": "json-server --host 0.0.0.0 --port $PORT db.json"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "json-server": "^1.0.0-beta.3"
   }
