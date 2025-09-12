@@ -22,3 +22,7 @@ html, body { @apply bg-[#fafafa] text-[#111827]; }
 .input { @apply w-full rounded-xl border-gray-300 focus:border-[#F27A1A] focus:ring-[#F27A1A]; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Carousel */
+.carousel-btn { @apply absolute top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-white/90 border shadow hover:bg-white transition; }
+.edge-fade-left  { @apply pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent z-10; }
+.edge-fade-right { @apply pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent z-10; }
