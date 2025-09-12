@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 
 export async function POST(req) {
-  const session = getSession();
+  const session = await getSession(); // önemli
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   try {
@@ -18,14 +18,12 @@ export async function POST(req) {
         id: it.id, title: it.title, price: Number(it.price), quantity: Number(it.quantity ?? it.qty ?? 1)
       })),
       total: Number(total.toFixed(2)),
-      status: "paid",
+      status: "pending",
     };
 
-    // json-server'a gönder
     const { data: created } = await api.post("/orders", order);
-
     return NextResponse.json({ order: created }, { status: 201 });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "failed_to_create" }, { status: 500 });
   }
 }
