@@ -20,6 +20,33 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Özellikler
+
+- 🔐 Kullanıcı giriş/çıkış (demo kullanıcı: `demo@demo.com / 1234`)
+- 📦 Sepete ürün ekleme, adet güncelleme, silme
+- ❤️ Favorilere ekleme / kaldırma (Wishlist)
+- 🛍 Sipariş oluşturma & geçmişi görüntüleme
+- 💳 Siparişi ödeme (demo)
+- 🔍 Arama, kategori filtreleme, fiyat filtreleme, sıralama
+- 📱 Responsive modern UI (TailwindCSS)
+
+Sonra backend (JSON Server):
+cd mobiversite-api
+npm install
+npm start
+---
+-Proje Yapısı
+mobiversite-shop/
+├── src/
+│   ├── app/         # Next.js app router pages
+│   ├── components/  # Reusable UI bileşenleri
+│   ├── store/       # Redux Toolkit store + slices
+│   └── lib/         # axios, auth, utils
+├── mobiversite-api/ # JSON Server backend
+├── public/          # static assets
+├── package.json
+└── README.md
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
