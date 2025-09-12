@@ -1,48 +1,42 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
 import WishlistButton from "@/components/WishlistButton";
-import RatingStars from "@/components/RatingStars";
 
 export default function ProductCard({ product }) {
-  const p = product;
-  const discount = p.fakeDiscount ?? 0; // istersen API'den gelmiyorsa uydurma
-  const oldPrice = discount ? (p.price * (100 + discount)) / 100 : null;
+  const { id, title, image, price, category } = product;
 
   return (
-    <div className="group card relative flex flex-col overflow-hidden">
-      {/* wishlist kalbi */}
-      <div className="absolute left-2 top-2 z-10">
-        <WishlistButton productId={p.id} className="btn btn-ghost px-2 py-1" />
-      </div>
+    <div className="card group relative overflow-hidden">
+      {/* Görsel + metin */}
+      <Link href={`/products/${id}`} className="block">
+        <div className="h-48 w-full flex items-center justify-center bg-gray-50 rounded-xl">
+          <Image
+            src={image}
+            alt={title}
+            width={300}
+            height={300}
+            className="h-44 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+        </div>
 
-      {/* resim */}
-      <Link href={`/products/${p.id}`} className="block">
-        <img src={p.image} alt={p.title} className="h-48 w-full object-contain transition group-hover:scale-[1.02]" />
+        <div className="mt-3 space-y-1">
+          {category && <span className="chip capitalize">{category}</span>}
+          <h3 className="font-semibold leading-tight line-clamp-2">{title}</h3>
+          <div className="text-lg font-bold">${Number(price).toFixed(2)}</div>
+        </div>
       </Link>
 
-      {/* içerik */}
-      <div className="mt-3 flex-1 flex flex-col">
-        <Link href={`/products/${p.id}`}>
-          <h3 className="font-medium line-clamp-2">{p.title}</h3>
-        </Link>
-        <div className="mt-1 flex items-center justify-between">
-          <span className="chip">{p.category}</span>
-          <RatingStars value={p.rating?.rate || 4.5} count={p.rating?.count || 120} />
-        </div>
-
-        <div className="mt-2">
-          {oldPrice && (
-            <div className="text-sm text-muted line-through">${oldPrice.toFixed(2)}</div>
-          )}
-          <div className="text-lg font-semibold">${Number(p.price).toFixed(2)}</div>
-          {discount ? <span className="badge badge-orange mt-1">-%{discount}</span> : null}
-        </div>
+      {/* Wishlist butonu (köşede) */}
+      <div className="absolute top-2 right-2">
+        <WishlistButton productId={id} />
       </div>
 
-      {/* hızlı aksiyon */}
+      {/* Sepete hızlı ekle */}
       <div className="mt-3">
-        <AddToCartButton product={p} />
+        <AddToCartButton product={product} />
       </div>
     </div>
   );
