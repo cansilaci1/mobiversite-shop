@@ -15,7 +15,11 @@ Bu proje kapsamında ürün listeleme, kullanıcı etkileşimi, responsive tasar
 - ⚡ **Modern UI**: Hızlı, şık ve kullanıcı deneyimi odaklı tasarım  
 
 ---
+## Canlı Demo
+-Frontend (Vercel): https://mobiversite-shop.vercel.app
+-Backend (Render): https://mobiversite-api.onrender.com/products
 
+---
 ## 🛠️ Kullanılan Teknolojiler
 
 - **Frontend**: Next.js (React tabanlı framework)  
