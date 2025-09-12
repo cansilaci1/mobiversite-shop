@@ -16,8 +16,8 @@ Bu proje kapsamında ürün listeleme, kullanıcı etkileşimi, responsive tasar
 
 ---
 ## Canlı Demo
--Frontend (Vercel): https://mobiversite-shop.vercel.app
--Backend (Render): https://mobiversite-api.onrender.com/products
+-Frontend (Vercel): [https://mobiversite-shop-m8w3.vercel.app/](https://mobiversite-shop-m8w3.vercel.app/)
+-Backend (Render): [https://mobiversite-api.onrender.com/products](https://mobiversite-shop-1.onrender.com)
 
 ---
 ## 🛠️ Kullanılan Teknolojiler
