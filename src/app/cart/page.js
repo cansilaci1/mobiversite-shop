@@ -22,32 +22,37 @@ export default function CartPage() {
   const triedAuto = useRef(false); // ✅ auto-resume guard
 
   async function handleCheckout() {
-    setPlacing(true);
-    setErr("");
-    try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items }),
-      });
+  setPlacing(true); setErr("");
+  try {
+    const res = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ items })
+    });
 
-      if (res.status === 401) {
-        // login yok → login'e yönlendir; dönüşte otomatik devam
-        const redirect = "/cart?checkout=1";
-        router.push(`/login?redirect=${encodeURIComponent(redirect)}`);
-        return;
-      }
-      if (!res.ok) throw new Error("Failed to place order");
-
-      // başarı → sepeti temizle ve profile'a
-      dispatch(clearCart());
-      router.push("/profile");
-    } catch (e) {
-      setErr(e.message || "Checkout failed");
-    } finally {
-      setPlacing(false);
+    if (res.status === 401) {
+      const redirectUrl = "/cart?checkout=1";
+      router.push(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
+      return;
     }
+    if (!res.ok) throw new Error("Failed to place order");
+
+    const data = await res.json();
+    const orderId = data?.order?.id ?? data?.id; // her iki formata da dayanıklı
+    dispatch(clearCart());
+
+    if (orderId) {
+      router.push(`/order-success?orderId=${orderId}`);
+    } else {
+      router.push("/profile");
+    }
+  } catch (e) {
+    setErr(e.message || "Checkout failed");
+  } finally {
+    setPlacing(false);
   }
+}
+
 
   // ✅ Auto-resume: /cart?checkout=1 ile gelindiyse bir KEZ otomatik sipariş ver
   useEffect(() => {
